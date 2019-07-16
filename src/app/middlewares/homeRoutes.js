@@ -1,7 +1,7 @@
 const homeRoutes = (server) => {
-    server.get('/', (req,res,next) => {
+    server.get('/', (res) => {
         res.send('Rodando')
-        next();
+        return false
     });
 };
 
