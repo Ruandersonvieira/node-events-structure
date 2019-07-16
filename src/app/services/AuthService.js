@@ -11,14 +11,14 @@ const AuthService = (socket) => {
         data = JSON.parse(data);
         toHash = data.user + '.' + data.serviceInfo + '.' + process.env.JWT_ENCRYPTION;
         const token = crypt.createHash('md5').update(toHash).digest('hex');
-        console.log(token);
-        console.log(data.token);
-        if(data.token === token) {
-            console.log("Token igual")
-        } else{
-            console.log("Token Diferente")
+        if (data.token !== token) {
+            return socket.disconnect();
+        }else {
+            socket.auth = true;
+            console.log(socket.auth);
         }
     });
+
 };
 
 module.exports = AuthService;
