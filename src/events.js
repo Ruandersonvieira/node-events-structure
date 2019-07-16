@@ -4,7 +4,7 @@ service = requireDir('./app/services');
 const events = (io) => {
     io.on('connection', function (socket) {
         console.log('Entrou no evento')
-        service.FirstService(socket)
+        service.AuthService(socket)
     });
 }
 
