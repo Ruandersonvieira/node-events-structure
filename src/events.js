@@ -3,8 +3,8 @@ service = requireDir('./app/services');
 
 const events = (io) => {
     io.on('connection', function (socket) {
-        console.log('Entrou no evento')
         socket.auth = false;
+
         setTimeout(function () {
             if (!socket.auth) {
                 socket.disconnect();
@@ -13,6 +13,7 @@ const events = (io) => {
         }, 30000);
 
         service.AuthService(socket);
+        service.TrinityService(socket);
     });
 }
 
