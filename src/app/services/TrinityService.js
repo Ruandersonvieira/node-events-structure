@@ -5,30 +5,26 @@ const TrinityService = (socket) => {
 
     sub.on('message', function(chan, msg) {
         if (chan === "redis.user.accessServer") {
+            console.log('Executing event: redis.user.accessServer');
             console.log('Execute event: trinity.user.page.accessed');
-
-            return socket.emit('trinity.user.page.accessed', msg);
+            
+            return socket.broadcast.emit('trinity.user.page.accessed', msg);
         }
     });
 
     socket.on('trinity.user.page.leaving', function (data) {
-        console.log('Execute event: trinity.user.page.leaving');
+        console.log('Executing event: trinity.user.page.leaving');
         data = JSON.parse(data);
-
+      
         redisClient.get(data.trinityId +":viewers", function(err, res) {
-            res = JSON.parse(res);
-            ///res = JSON.parse(res); 
-            console.log(typeof(res));
-        
-
-            //console.log(res.usersViews)
-            //let x = delete res.usersViews[data.iduser]
-            //console.log(x);
-
-           //x = JSON.stringify(res)
-            console.log(res)
-            //redisClient.setex(data.trinityId +":viewers", 250, JSON.stringify(res));
-            //socket.emit('userAccessServer', JSON.stringify({"serverId" : data.trinityId, "usersViews":res }));
+            if (res){
+                res = JSON.parse(res, true);
+                delete res[data.iduser];
+                redisClient.setex(data.trinityId +":viewers", 250, JSON.stringify(res));
+                console.log('Execute event: trinity.user.page.quit');
+                socket.emit('trinity.user.page.quit', JSON.stringify({"serverId" : data.trinityId, "usersViews":res }));
+                return socket.broadcast.emit('trinity.user.page.quit', JSON.stringify({"serverId" : data.trinityId, "usersViews":res }));
+            }
         });
     });
 };
