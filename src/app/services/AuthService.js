@@ -1,7 +1,7 @@
 const crypt = require('crypto');
-
+let token;
 function getToken(data) {
-    toHash = data.user + '.' + data.serviceInfo + '.' + process.env.TOKEN_ENCRYPTION;
+    let toHash = data.user + '.' + data.serviceInfo + '.' + process.env.TOKEN_ENCRYPTION;
     return crypt.createHash('md5').update(toHash).digest('hex');
 }
 
@@ -12,6 +12,7 @@ const AuthService = (socket) => {
         
         return socket.emit('event.auth.token.send', { token });
     });
+
     socket.on('event.auth.token.verify', function (data) {
         data = JSON.parse(data);
         token = getToken(data);

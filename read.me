@@ -1,0 +1,81 @@
+# Trinty Notifiy!
+# Instalação
+Requisitos: [NodeJS](https://nodejs.org/en/), [Nodemon](https://nodemon.io/) e [Yarn](https://yarnpkg.com/en/).
+
+## Install node modules
+O Yarn foi escolhido por conta do avançado sistema de cache, entretanto, pode ser utilizado com o npm padrão.
+
+`$ yarn instal`
+
+## Criação .env
+Após a instalação das dependências é necessário copiar o arquivo `.env` e fazer a  configuração do mesmo.
+
+`$ cp .env.example .env`
+
+## Run Service
+
+Após a instalação das dependências, executar o comando para rodar o servidor local:
+
+`$ yarn dev`
+
+# Estrutura
+
+## Estrutura de Pastas
+.TrinityNotifications/
+├ src/
+├─  app/
+├── services/
+├─ config/
+├ ./env.exemple
+├ ./gitignore
+├ ./package.json
+├ ./yarn.lock
+
+
+
+## A seguinte estrutura é descrita:
+
+* `.src/` Pasta onde contem todo o código
+* `./src/app/` Pasta das funcionalidade do app
+* `./src/services/` Pasta de serviços de eventos da aplicação
+* `./src/config/` Pasta das configurações
+* `./src/config/server.js` Configurações do servidor
+* `./src/config/redis.js` Configurações do redis
+* `./src/app.js` Arquivos de inicialização da aplicação
+* `./src/events.js` Arquivos que vai conter todas os serviços (Events) do sistema
+* `./src/.env.exemple` Exemplo da variável de ambiente
+* `./src/.gitignore` Ignorar os arquivos no git
+* `./src/package.json` Bibliotecas do node
+* `./src/yarn.lock` Bibliotecas do node
+
+## Criando de Novos Serviços
+
+* Cria um novo arquivo na pasta `src/app/services` com a ser nome do serviço seguindo com a nomenclatura service, como exemplo, o serviço de `Whastapp`  ficaria `WhastappService.js`
+
+* Dentro do arquivo `WhastappService.js` ficaria a seguinte estrutura:
+
+``` javascript
+const  WhatsappService  = (socket) => {
+	socket.on('Nome do Evento', function (data) {
+		
+		return socket.emit('Nome do Evento', { data });
+	});
+};
+module.exports = WhatsappService;
+```
+Obs: O nomes do eventos devem seguir o seguinte padrão Nome.Setor.Função.operação como exemplo um serviço do `Whatsapp` , enviando os dados  do diagnósticos `Diagnosis` do Status do serviços `status`  e como ele está enviando ficaria `send`, nesse caso o evento ficaria `'whatsapp.diagnosis.status.send'`.
+
+* Após terminar os comando de eventos você modificaria o arquivo `src/events.js`  chamando o novo serviço criado:
+
+``` javascript
+io.on('connection', function (socket) {
+
+	/// ... Outros códigos ...
+	
+	service.WhatsappService(socket);
+	
+	///... Outros códigos ...
+	});
+}
+module.exports = events;
+```

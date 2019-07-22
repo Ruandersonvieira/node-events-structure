@@ -1,9 +1,9 @@
 require('dotenv/config');
+sub = require('./config/redis');
 const server = require('./config/server');
-const socketio = require('socket.io');
-var io = socketio.listen(server.server);
+let io = require('socket.io').listen(server.server);
 
-require('./events')(io);
+require('./events')(io,sub);
 
 server.listen(process.env.APP_PORT, () => {
     console.log(`${server.name} listening at ${server.url}`);
