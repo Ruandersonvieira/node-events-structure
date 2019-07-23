@@ -1,13 +1,10 @@
 const requireDir = require('require-dir');
 service = requireDir('./app/services');
-// let sub, pub = require('./config/redis');
 
-const events = (io, sub, pub) => {
+const events = (io) => {
     io.on('connection', function (socket) {
         console.log(`Connect ${socket.id}`);
-        socket.auth = false;
-        sub.subscribe('redis.user.accessServer');
-
+        socket.auth = false;     
 
         setTimeout(function () {
             if (!socket.auth) {
@@ -16,8 +13,9 @@ const events = (io, sub, pub) => {
             }
         }, 30000);
 
+        service.RedisService(socket);
         service.AuthService(socket);
-        service.TrinityService(socket,sub);
+        service.TrinityService(socket);
     });
 }
 

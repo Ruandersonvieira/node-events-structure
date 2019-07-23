@@ -6,14 +6,14 @@ function getToken(data) {
 }
 
 const AuthService = (socket) => {
-    socket.on('event.auth.token.get', function (data) {
+    socket.on('event.auth.tokenGet', function (data) {
         data = JSON.parse(data);
         token = getToken(data);
         
-        return socket.emit('event.auth.token.send', { token });
+        return socket.emit('event.auth.tokenSend', { token });
     });
 
-    socket.on('event.auth.token.verify', function (data) {
+    socket.on('event.auth.tokenVerify', function (data) {
         data = JSON.parse(data);
         token = getToken(data);
         

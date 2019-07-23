@@ -1,20 +1,16 @@
 const TrinityService = (socket) => {
-    sub.subscribe('redis.user.accessServer');
-
-    sub.on('message', function(chan, msg) {
-        if (chan === "redis.user.accessServer") {
-            console.log(`${socket.id} >> listen event: redis.user.accessServer`);
-            console.log(`${socket.id} >> execute event: trinity.user.page.accessed`);
-            
-            return socket.broadcast.emit('trinity.user.page.accessed', msg);
-        }
+    socket.on('redis.whatsapp.serverPageAccessedByUser', function (msg) {
+        console.log(`${socket.id} >> executing listen: redis.whatsapp.serverPageAccessedByUser`);
+        console.log(`${socket.id} >> executing event: trinity.whatsapp.serverPageAccessedByUser`);
+      
+        return socket.broadcast.emit('event.whatsapp.serverPageAccessedByUser', msg);
     });
 
-    socket.on('trinity.user.page.leaving', function (data) {
-        console.log(`${socket.id} >> executing listen: trinity.user.page.leaving`);
-        console.log(`${socket.id} >> executing event: trinity.user.page.leaving`);
+    socket.on('redis.whatsapp.serverPageLeavingByUser', function (msg) {
+        console.log(`${socket.id} >> executing listen: redis.whatsapp.serverPageLeavingByUser`);
+        console.log(`${socket.id} >> executing event: event.whatsapp.serverPageLeavingByUser`);
       
-        return socket.broadcast.emit('trinity.user.page.quit', JSON.stringify({"serverId" : data.trinityId, "usersViews":res }));
+        return socket.broadcast.emit('event.whatsapp.serverPageLeavingByUser', msg);
     });
 };
 
